@@ -65,6 +65,49 @@ function isPuzzleSolved(){
   return false;
 }
 
+// Function to scramble the puzzle
+function scramblePuzzle(){
+  const numberOfSwaps = 1000;
+
+  // Perform the number of swaps on the puzzle
+  for(let i = 0; i < numberOfSwaps; i++){
+    // Get all the cells in grid
+    const cells = document.querySelectorAll("#game td div");
+
+    // get the blank cell
+    const blankCell = document.querySelector("#game td div:empty");
+    const blankId = blankCell.id;
+
+    // set an array to store the adjacent options
+    const adjacentCells = [];
+
+    // get id's of the adjacent cells
+    const blankCellRow = parseInt(blankId.split(",")[0]);
+    const blankCellCol = parseInt(blankId.split(",")[1]);
+   
+    // check cells
+    if(blankCellCol > 1){
+      adjacentCells.push(blankCellRow + "," + (blankCellCol - 1));
+    }
+    if(blankCellCol < 4){
+      adjacentCells.push(blankCellRow + "," + (blankCellCol + 1));
+    }
+    if(blankCellRow > 1){
+      adjacentCells.push(blankCellRow - 1 + "," + blankCellCol);
+    }
+    if(blankCellRow < 4){
+      adjacentCells.push(blankCellRow + 1 + "," + blankCellCol);
+    }
+
+    // randomly pick an adjacent cell
+    const randomI = Math.floor(Math.random() * adjacentCells.length);
+    const randomId = adjacentCells[randomI];
+
+    // swap the cells
+    swapValues(randomId, blankId);
+  }
+}
+
 // Function to reset the puzzle
 function resetPuzzle(){
   // Get all the cells in grid
@@ -78,11 +121,9 @@ function resetPuzzle(){
   document.getElementById("game").style.backgroundColor = "white";
 }
 
-
 // Function to handle click event on the reset button
 document.getElementById("reset-button").onclick = function(evt) {
 	if (evt.target.id == "reset-button"){
-		document.getElementById("test").innerHTML = "Reset button clicked";
     resetPuzzle();
     }
   };
@@ -92,8 +133,7 @@ document.getElementById("reset-button").onclick = function(evt) {
 document.getElementById("scramble-button").onclick = function(evt) {
   // Check if the clicked element is the scramble button
   if (evt.target.id == "scramble-button")
-    // If yes, set innerHTML of element with id "test" to "Scramble button clicked"
-    document.getElementById("test").innerHTML = "Scramble button clicked";
+    scramblePuzzle();
 };
 
 window.onload = initPuzzle;
