@@ -61,7 +61,7 @@ function swapValues(cellId1, cellId2){
 
 // Function to scramble the puzzle
 function scramblePuzzle(){
-  const numberOfSwaps = 2;
+  const numberOfSwaps = 1000;
 
   // Perform the number of swaps on the puzzle
   for(let i = 0; i < numberOfSwaps; i++){
