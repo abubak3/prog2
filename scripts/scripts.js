@@ -59,15 +59,9 @@ function swapValues(cellId1, cellId2){
   document.getElementById(cellId2).innerText = value1;
 }
 
-// Function to check if the puzzle is solved
-function isPuzzleSolved(){
-
-  return false;
-}
-
 // Function to scramble the puzzle
 function scramblePuzzle(){
-  const numberOfSwaps = 1000;
+  const numberOfSwaps = 2;
 
   // Perform the number of swaps on the puzzle
   for(let i = 0; i < numberOfSwaps; i++){
@@ -106,6 +100,7 @@ function scramblePuzzle(){
     // swap the cells
     swapValues(randomId, blankId);
   }
+  document.getElementById("game").style.backgroundColor = "white";
 }
 
 // Function to reset the puzzle
@@ -120,6 +115,30 @@ function resetPuzzle(){
   });
   document.getElementById("game").style.backgroundColor = "white";
 }
+
+// Function to check if the puzzle is solved
+function isPuzzleSolved(){
+  // Get all the cells in grid
+  const cells = document.querySelectorAll("#game td div");
+
+  // Loop through each cell and compare its content with its expected value
+  for (let i = 0; i < cells.length - 1; i++) {
+    // Convert cell content to integer for comparison
+    const cellContent = parseInt(cells[i].innerHTML);
+    
+    // Expected value for the cell
+    const expectedValue = i + 1;
+
+    // If the content does not match the expected value, puzzle is not solved
+    if (cellContent !== expectedValue) {
+      return false;
+    }
+  }
+
+  // If all cells are in their expected positions, puzzle is solved
+  return true;
+}
+
 
 // Function to handle click event on the reset button
 document.getElementById("reset-button").onclick = function(evt) {
