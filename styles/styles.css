@@ -27,8 +27,17 @@ body{
 }
 
 #game{
-  padding: 15px;
+  padding: 35px;
 }
 #buttons{
   padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#reset-button,#scramble-button{
+  margin-bottom: 20px;
+  width: 100px;
 }
