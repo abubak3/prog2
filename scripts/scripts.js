@@ -18,12 +18,21 @@ function initPuzzle(){
         swapValues(clickedID, blankCellId);
 
         // Check if puzzle is solved
-        if(isPuzzleSolved()){
-          // Turn grid to Green
-          document.getElementById("game").style.backgroundColor = "green";
-        }
+        if(isPuzzleSolved())
+          puzzleSolved();
       }
     });
+  });
+}
+
+// Function for after puzzle is solved
+function puzzleSolved(){
+  document.getElementById("table").style.backgroundColor = "green";
+  document.getElementById("solved").style.color = "black";
+  const grid = document.querySelectorAll("#game td");
+  grid.forEach(cell => {
+    cell.style.backgroundColor = "green";
+    cell.style.color = "green";
   });
 }
 
@@ -61,6 +70,7 @@ function swapValues(cellId1, cellId2){
 
 // Function to scramble the puzzle
 function scramblePuzzle(){
+  resetPuzzle();
   const numberOfSwaps = 1000;
 
   // Perform the number of swaps on the puzzle
@@ -113,7 +123,13 @@ function resetPuzzle(){
   cells.forEach((cell, index) => {
     cell.innerHTML = initialOrder[index];
   });
-  document.getElementById("game").style.backgroundColor = "white";
+  document.getElementById("table").style.backgroundColor = "white";
+  document.getElementById("solved").style.color = "white";
+  const grid = document.querySelectorAll("#game td");
+  grid.forEach(cell => {
+    cell.style.backgroundColor = "antiquewhite";
+    cell.style.color = "black";
+  });
 }
 
 // Function to check if the puzzle is solved
