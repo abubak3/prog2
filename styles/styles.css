@@ -37,7 +37,7 @@ body{
   align-items: center;
 }
 
-#reset-button,#scramble-button{
+#reset-button,#scramble-button,#picture-button{
   margin-bottom: 20px;
   width: 100px;
 }

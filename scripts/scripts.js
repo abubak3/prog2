@@ -7,23 +7,25 @@ function initPuzzle(){
   cells.forEach(cell => {
     cell.addEventListener("click", function(evt) {
       // Get the ID of the clicked cell
-      const clickedID = evt.target.id;
-
+      const clickedID = cell.id;
+  
       // Get the ID of the blank cell
       const blankCellId = document.querySelector("#game td div:empty").id;
+     //document.getElementById("click-text").innerText = `Clicked cell ${clickedID} Blank cell ${blankCellId} Inner HTML ${cell.innerHTML}`;;
 
       // Check if the clicked cell is next to the blank cell
-      if(isAdjacent(clickedID, blankCellId)){
-        // Swap the values of the two cells
+      if (isAdjacent(clickedID, blankCellId)) {
         swapValues(clickedID, blankCellId);
-
-        // Check if puzzle is solved
-        if(isPuzzleSolved())
+        if(isPuzzleSolved() || isPicturePuzzleSolved()){
           puzzleSolved();
+        }
       }
     });
   });
 }
+
+// Global variable to track puzzle mode;
+let isImageMode = false;
 
 // Function for after puzzle is solved
 function puzzleSolved(){
@@ -60,21 +62,20 @@ function isAdjacent(cell1Id, cell2Id) {
 
 // Function to swap the values of the two cells
 function swapValues(cellId1, cellId2){
-  // Get the value of the first cell
-  const value1 = document.getElementById(cellId1).innerText;
-  // Remove the value from the first cell
-  document.getElementById(cellId1).innerText = "";
-  // Add the value to the second cell
-  document.getElementById(cellId2).innerText = value1;
+  // Get the content of the cells
+  const content1 = document.getElementById(cellId1).innerHTML;
+  const content2 = document.getElementById(cellId2).innerHTML;
+
+  // Swap the content of the cells
+  document.getElementById(cellId1).innerHTML = content2;
+  document.getElementById(cellId2).innerHTML = content1;
 }
 
 // Function to scramble the puzzle
-function scramblePuzzle(){
-  resetPuzzle();
-  const numberOfSwaps = 1000;
+function scramblePuzzle(numSwap){
 
   // Perform the number of swaps on the puzzle
-  for(let i = 0; i < numberOfSwaps; i++){
+  for(let i = 0; i < numSwap; i++){
     // Get all the cells in grid
     const cells = document.querySelectorAll("#game td div");
 
@@ -132,6 +133,36 @@ function resetPuzzle(){
   });
 }
 
+function picturePuzzle(){
+  const cells = document.querySelectorAll("#game td div");
+  const initialOrder = ["image_part_001.jpg", "image_part_002.jpg", "image_part_003.jpg", "image_part_004.jpg", "image_part_005.jpg", "image_part_006.jpg", "image_part_007.jpg", "image_part_008.jpg", "image_part_009.jpg", "image_part_010.jpg", "image_part_011.jpg", "image_part_012.jpg", "image_part_013.jpg", "image_part_014.jpg", "image_part_015.jpg", ""];
+  
+  cells.forEach((cell, index) => {
+    if (initialOrder[index] !== "") {
+      const imageURL = initialOrder[index];
+      cell.innerHTML = `<img src="${imageURL}" width="100" height="75">`;
+      
+    } else {
+      cell.innerHTML = "";
+    }
+  });
+
+  scramblePuzzle(100);
+}
+
+// Function to handle click event on the picture button
+document.getElementById("picture-button").onclick = function(evt) {
+	if (evt.target.id == "picture-button"){
+    isImageMode = !isImageMode;
+    if(isImageMode){
+      resetPuzzle();
+      picturePuzzle();
+    } else{
+      resetPuzzle();
+    }
+  }
+};
+
 // Function to check if the puzzle is solved
 function isPuzzleSolved(){
   // Get all the cells in grid
@@ -155,6 +186,35 @@ function isPuzzleSolved(){
   return true;
 }
 
+// Function to check if the picture puzzle is solved
+function isPicturePuzzleSolved() {
+  // Get all the cells in the grid
+  const cells = document.querySelectorAll("#game td div");
+
+  // Expected initial order of image sources
+  const initialOrder = [
+    "<img src=\"image_part_001.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_002.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_003.jpg\" width=\"100\" height=\"75\">",
+    "<img src=\"image_part_004.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_005.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_006.jpg\" width=\"100\" height=\"75\">",
+    "<img src=\"image_part_007.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_008.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_009.jpg\" width=\"100\" height=\"75\">",
+    "<img src=\"image_part_010.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_011.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_012.jpg\" width=\"100\" height=\"75\">",
+    "<img src=\"image_part_013.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_014.jpg\" width=\"100\" height=\"75\">", "<img src=\"image_part_015.jpg\" width=\"100\" height=\"75\">",""
+  ];
+
+  // Loop through each cell and compare its image source with the expected order
+  for (let i = 0; i < cells.length; i++) {
+    // Get the image source of the cell
+    const imgSrc = cells[i].innerHTML;
+
+    // Compare the image source with the expected order
+    if (imgSrc !== initialOrder[i]) {
+      // If any image source does not match, puzzle is not solved
+      return false;
+    }
+  }
+
+  // If all cells have the correct image sources, puzzle is solved
+  return true;
+}
 
 // Function to handle click event on the reset button
 document.getElementById("reset-button").onclick = function(evt) {
@@ -163,12 +223,12 @@ document.getElementById("reset-button").onclick = function(evt) {
     }
   };
 
-  
 // Function to handle click event on the scramble button
 document.getElementById("scramble-button").onclick = function(evt) {
   // Check if the clicked element is the scramble button
   if (evt.target.id == "scramble-button")
-    scramblePuzzle();
+    resetPuzzle();
+    scramblePuzzle(100);
 };
 
 window.onload = initPuzzle;
